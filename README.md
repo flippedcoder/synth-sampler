@@ -1,9 +1,11 @@
-This project is a practice thing I made to work with functional/stateless React components.
-It uses the Tone.js library for all of the musical stuff.
+# synth-sampler
+
+This project started as a practice thing I made to work with functional/stateless React components.
+It uses the Tone.js library for all of the musical stuff and I recorded some random sounds to get started with because I got tired of trying to Google the exact noise I wanted.
 
 ## Run the project
 
-In the root directory, you can run:
+In the root directory, run:
 
 ### `npm install`
 
