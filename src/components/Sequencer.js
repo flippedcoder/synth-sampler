@@ -2,15 +2,29 @@ import React, { useState, useEffect } from "react";
 import Grid from "./Grid";
 import Bar from "./NavBar";
 import PlayButton from "./PlayButton";
+import ClearButton from "./ClearButton";
 
 // length of each sound row
 const steps = 16;
 
 // default state for each cell
-const initialCellState = { triggered: false, activated: false };
+const initialCellState = {
+    triggered: false,
+    activated: false
+};
 
 // order of samples by column
-const lineMap = ["BD", "CP", "CH", "OH", "AH", "RP", "LH", "OP", "BH"];
+const lineMap = [
+    "BD",
+    "CP",
+    "CH",
+    "OH",
+    "AH",
+    "RP",
+    "LH",
+    "OP",
+    "BH"
+];
 
 // initialize each cell on every row
 const initialState = [
@@ -32,26 +46,26 @@ const Sequencer = ({ player }) => {
 
     // determines if a cell has been set to play
     const toggleStep = (line, step) => {
-        const sequenceCopy = [...sequence];
+        let sequenceCopy = sequence;
         const { triggered, activated } = sequenceCopy[line][step];
 
         sequenceCopy[line][step] = { triggered, activated: !activated };
-        console.log("toggled");
         setSequence(sequenceCopy);
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const nextStep = time => {
-        for (let i = 0; i < sequence.length; i++) {
-            for (let j = 0; j < sequence[i].length; j++) {
-                const { triggered, activated } = sequence[i][j];
-                sequence[i][j] = { activated, triggered: j === time };
+        let sequenceCopy = [...sequence];
+        for (let i = 0; i < sequenceCopy.length; i++) {
+            for (let j = 0; j < sequenceCopy[i].length; j++) {
+                const { triggered, activated } = sequenceCopy[i][j];
+                sequenceCopy[i][j] = { activated, triggered: j === time };
                 if (triggered && activated) {
                     player.get(lineMap[i]).start();
                 }
             }
         }
-        setSequence(sequence);
+        setSequence(sequenceCopy);
     };
 
     useEffect(() => {
@@ -71,6 +85,8 @@ const Sequencer = ({ player }) => {
         <>
             <Bar>
                 <PlayButton playing={playing} onClick={() => setPlaying(!playing)} />
+                <ClearButton onClick={() => setSequence(initialState)} />
+                <input type="number" />
             </Bar>
             <Grid sequence={sequence} toggleStep={toggleStep} />
         </>

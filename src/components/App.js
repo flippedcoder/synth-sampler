@@ -2,7 +2,7 @@ import React from "react";
 import Sequencer from "./Sequencer";
 import PlayerProvider from "./PlayerProvider";
 
-function App() {
+const App = () => {
   return (
     <PlayerProvider>
       {({ player }) => {
