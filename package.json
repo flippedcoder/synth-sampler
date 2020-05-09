@@ -9,7 +9,7 @@
     "polished": "^3.4.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "react-scripts": "3.3.0",
+    "react-scripts": "^3.4.0",
     "styled-components": "^4.4.1",
     "tone": "^13.8.25"
   },
