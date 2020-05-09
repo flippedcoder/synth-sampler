@@ -3,69 +3,44 @@ import Grid from "./Grid";
 import Bar from "./NavBar";
 import PlayButton from "./PlayButton";
 import ClearButton from "./ClearButton";
-
-// length of each sound row
-const steps = 16;
-
-// default state for each cell
-const initialCellState = {
-    triggered: false,
-    activated: false
-};
-
-// order of samples by column
-const lineMap = [
-    "BD",
-    "CP",
-    "CH",
-    "OH",
-    "AH",
-    "RP",
-    "LH",
-    "OP",
-    "BH"
-];
-
-// initialize each cell on every row
-const initialState = [
-    new Array(steps).fill(initialCellState),
-    new Array(steps).fill(initialCellState),
-    new Array(steps).fill(initialCellState),
-    new Array(steps).fill(initialCellState),
-    new Array(steps).fill(initialCellState),
-    new Array(steps).fill(initialCellState),
-    new Array(steps).fill(initialCellState),
-    new Array(steps).fill(initialCellState),
-    new Array(steps).fill(initialCellState)
-];
+import {
+    steps,
+    lineMap,
+    initialState
+} from '../helpers/initial-values'
 
 const Sequencer = ({ player }) => {
     const [sequence, setSequence] = useState(initialState);
-    const [playing, setPlaying] = useState(true);
+    const [playing, setPlaying] = useState(false);
     const [currentStep, setCurrentStep] = useState(0);
 
     // determines if a cell has been set to play
-    const toggleStep = (line, step) => {
-        let sequenceCopy = sequence;
-        const { triggered, activated } = sequenceCopy[line][step];
+    const toggleStep = (line, cell) => {
+        const { triggered, activated } = sequence[line][cell]
 
-        sequenceCopy[line][step] = { triggered, activated: !activated };
-        setSequence(sequenceCopy);
+        const updatedCell = { triggered, activated: !activated }
+        const updatedSequence = [ ...sequence, {...sequence[line][cell]}= {activated: updatedCell.activated, triggered: updatedCell.triggered} ].filter(item => Array.isArray(item) )
+        setSequence(updatedSequence)
     };
+
+    const handleClearGrid = () => {
+        setSequence(initialState)
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const nextStep = time => {
-        let sequenceCopy = [...sequence];
-        for (let i = 0; i < sequenceCopy.length; i++) {
-            for (let j = 0; j < sequenceCopy[i].length; j++) {
-                const { triggered, activated } = sequenceCopy[i][j];
-                sequenceCopy[i][j] = { activated, triggered: j === time };
-                if (triggered && activated) {
-                    player.get(lineMap[i]).start();
+        const updatedSequence = sequence.map((mixerLine, mIndex) => 
+            mixerLine.map(({ activated }, cIndex) => {
+                const updatedCell = { activated: activated, triggered: cIndex === time }
+
+                if (updatedCell.triggered && updatedCell.activated) {
+                    player.get(lineMap[mIndex]).start()
                 }
-            }
-        }
-        setSequence(sequenceCopy);
+
+                return updatedCell
+            })
+        )
+        setSequence(updatedSequence)
     };
 
     useEffect(() => {
@@ -85,7 +60,7 @@ const Sequencer = ({ player }) => {
         <>
             <Bar>
                 <PlayButton playing={playing} onClick={() => setPlaying(!playing)} />
-                <ClearButton onClick={() => setSequence(initialState)} />
+                <ClearButton onClick={() => handleClearGrid()} />
                 <input type="number" />
             </Bar>
             <Grid sequence={sequence} toggleStep={toggleStep} />
