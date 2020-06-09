@@ -1,4 +1,4 @@
-# synth-sampler
+# Music Mixer
 
 This project started as a practice thing I made to work with functional/stateless React components.
 It uses the Tone.js library for all of the musical stuff and I recorded some random sounds to get started with because I got tired of trying to Google the exact noise I wanted.
